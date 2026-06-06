@@ -4,7 +4,7 @@
   <ClientId>{ef1ee89f-5caa-4b0d-abef-6eb35a8a244c}</ClientId>
   <DisplayName>InventorAddIn2</DisplayName>
   <Description>InventorAddIn2</Description>
-  <Assembly>InventorAddIn2.dll</Assembly>
+  <Assembly>D:\Dev\PRD-SoftWehr\AutodeskPlugin1\InventorAddIn2\InventorAddIn2\bin\Debug\net4.8-windows\InventorAddIn2.dll</Assembly>
   <LoadOnStartUp>1</LoadOnStartUp>
   <UserUnloadable>1</UserUnloadable>
   <Hidden>0</Hidden>

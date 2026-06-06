@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net4.8-windows</TargetFramework>
+    <TargetFramework>net9.0-windows</TargetFramework>
     <OutputType>Library</OutputType>
     <StartupObject>
     </StartupObject>
@@ -58,6 +58,7 @@
     <Compile Include="AssemblyInfo.vb" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="My Project\Application.myapp" />
     <None Include="Readme.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -103,7 +104,14 @@
       <EmbedInteropTypes>true</EmbedInteropTypes>
     </COMReference>
   </ItemGroup>
+  
   <PropertyGroup>
   <ApplicationManifest>InventorAddIn2.X.manifest</ApplicationManifest>
 </PropertyGroup>
+
+  <PropertyGroup>
+    <StartAction>Program</StartAction>
+    <StartProgram>D:\Program Files\Autodesk\Inventor 2027\Bin\Inventor.exe</StartProgram>
+  </PropertyGroup>
+  
 </Project>

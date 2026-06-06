@@ -17,6 +17,11 @@ Namespace InventorAddIn2
         ' to the Inventor Application object. The FirstTime flag indicates if the AddIn is loaded for
         ' the first time. However, with the introduction of the ribbon this argument is always true.
         Public Sub Activate(ByVal addInSiteObject As Inventor.ApplicationAddInSite, ByVal firstTime As Boolean) Implements Inventor.ApplicationAddInServer.Activate
+
+            Debugger.Launch()
+            Debugger.Break()
+
+
             ' Initialize AddIn members.
             g_inventorApplication = addInSiteObject.Application
 
