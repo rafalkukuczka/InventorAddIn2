@@ -1,15 +1,25 @@
-Imports System.Runtime.InteropServices
+﻿Imports System.Runtime.InteropServices
 Imports Inventor
 Imports Microsoft.Win32
+Imports InventorAddIn2.Core
+Imports InventorAddIn2.Core.Logger
+
 
 Namespace InventorAddIn2
-    <ProgIdAttribute("InventorAddIn2.StandardAddInServer"), _
-    GuidAttribute("ef1ee89f-5caa-4b0d-abef-6eb35a8a244c")> _
+
+
+
+    <ProgIdAttribute("InventorAddIn2.StandardAddInServer"),
+    GuidAttribute("ef1ee89f-5caa-4b0d-abef-6eb35a8a244c")>
     Public Class StandardAddInServer
         Implements Inventor.ApplicationAddInServer
 
+        <DllImport("kernel32.dll")>
+        Public Shared Sub Sleep(dwMilliseconds As Integer)
+        End Sub
+
         Private WithEvents m_uiEvents As UserInterfaceEvents
-        'Private WithEvents m_sampleButton As ButtonDefinition
+        Private WithEvents m_sampleButton As ButtonDefinition
 
 #Region "ApplicationAddInServer Members"
 
@@ -18,8 +28,41 @@ Namespace InventorAddIn2
         ' the first time. However, with the introduction of the ribbon this argument is always true.
         Public Sub Activate(ByVal addInSiteObject As Inventor.ApplicationAddInSite, ByVal firstTime As Boolean) Implements Inventor.ApplicationAddInServer.Activate
 
-            Debugger.Launch()
-            Debugger.Break()
+            Dim a = New Man("Adaś", 15)
+            Dim m = New Man("Michaś", 27)
+            Dim r = New Man("Rafał", 52)
+            Dim x = New Woman("Xenia", 52)
+
+            Dim family As List(Of IPerson) = New List(Of IPerson)
+            family.AddRange({a, m, x, r})
+
+            Dim logger As ILogger = New DebugLogger()
+
+            For Each p As IPerson In family
+                p.Hello(logger)
+            Next
+
+            For j As Integer = 1 To 10
+                Debug.WriteLine(j)
+            Next
+
+            Dim i As Integer = 5
+            While i > 0
+                Debug.WriteLine(i)
+                i = i - 1
+
+                If i = 2 Then
+                    Debug.Write("Exiting")
+                    Exit While
+                End If
+            End While
+
+
+
+
+
+            'Debugger.Launch()
+            'Debugger.Break()
 
 
             ' Initialize AddIn members.
@@ -32,9 +75,12 @@ Namespace InventorAddIn2
 
             ' Sample to illustrate creating a button definition.
             'Dim largeIcon As stdole.IPictureDisp = PictureDispConverter.ToIPictureDisp(My.Resources.YourBigImage)
+            Dim largeIcon As stdole.IPictureDisp = PictureDispConverter.ToIPictureDisp(My.Resources.Resource1.ico32x32)
+
             'Dim smallIcon As stdole.IPictureDisp = PictureDispConverter.ToIPictureDisp(My.Resources.YourSmallImage)
-            'Dim controlDefs As Inventor.ControlDefinitions = g_inventorApplication.CommandManager.ControlDefinitions
-            'm_sampleButton = controlDefs.AddButtonDefinition("Command Name", "Internal Name", CommandTypesEnum.kShapeEditCmdType, AddInClientID)
+            Dim smallIcon As stdole.IPictureDisp = PictureDispConverter.ToIPictureDisp(My.Resources.Resource1.ico16x16)
+            Dim controlDefs As Inventor.ControlDefinitions = g_inventorApplication.CommandManager.ControlDefinitions
+            m_sampleButton = controlDefs.AddButtonDefinition("Command Name", "Internal Name", CommandTypesEnum.kShapeEditCmdType, AddInClientID, "Desc", "ToolTip", largeIcon)
 
             ' Add to the user interface, if it's the first time.
             If firstTime Then
@@ -80,17 +126,17 @@ Namespace InventorAddIn2
 
             '** Sample to illustrate creating a button on a new panel of the Tools tab of the Part ribbon.
 
-            '' Get the part ribbon.
-            'Dim partRibbon As Ribbon = g_inventorApplication.UserInterfaceManager.Ribbons.Item("Part")
+            ' Get the part ribbon.
+            Dim partRibbon As Ribbon = g_inventorApplication.UserInterfaceManager.Ribbons.Item("Part")
 
-            '' Get the "Tools" tab.
-            'Dim toolsTab As RibbonTab = partRibbon.RibbonTabs.Item("id_TabTools")
+            ' Get the "Tools" tab.
+            Dim toolsTab As RibbonTab = partRibbon.RibbonTabs.Item("id_TabTools")
 
-            '' Create a new panel.
-            'Dim customPanel As RibbonPanel = toolsTab.RibbonPanels.Add("Sample", "MysSample", AddInClientID)
+            ' Create a new panel.
+            Dim customPanel As RibbonPanel = toolsTab.RibbonPanels.Add("Sample", "MysSample", AddInClientID)
 
-            '' Add a button.
-            'customPanel.CommandControls.AddButton(m_sampleButton)
+            ' Add a button.
+            customPanel.CommandControls.AddButton(m_sampleButton)
         End Sub
 
         Private Sub m_uiEvents_OnResetRibbonInterface(Context As NameValueMap) Handles m_uiEvents.OnResetRibbonInterface
@@ -99,11 +145,67 @@ Namespace InventorAddIn2
         End Sub
 
         ' Sample handler for the button.
-        'Private Sub m_sampleButton_OnExecute(Context As NameValueMap) Handles m_sampleButton.OnExecute
-        '    MsgBox("Button was clicked.")
-        'End Sub
+        Private Sub m_sampleButton_OnExecute(Context As NameValueMap) Handles m_sampleButton.OnExecute
+            MsgBox("TestDialogProgressBar")
+            TestDialogProgressBar()
+
+            MsgBox("TestStatusBarProgressBar")
+            TestStatusBarProgressBar()
+        End Sub
 #End Region
 
+#Region "Additional methods and event handlers"
+
+
+        ' 32-bit version
+        'Public Declare Sub Sleep Lib "kernel32" (ByVal dwMilliseconds As Long)
+
+        Public Sub TestDialogProgressBar()
+            Dim iStepCount As Long
+            iStepCount = 50
+
+            ' Create a new ProgressBar object.
+            Dim oProgressBar As ProgressBar
+            oProgressBar = g_inventorApplication.CreateProgressBar(False, iStepCount, "Test Progress")
+
+            ' Set the message for the progress bar
+            oProgressBar.Message = "Executing some process"
+
+            Dim i As Long
+            For i = 1 To iStepCount
+                ' Sleep 0.2 sec to simulate some process
+                Sleep(200)
+                oProgressBar.Message = "Executing some process - " & i
+                oProgressBar.UpdateProgress()
+            Next
+
+            ' Terminate the progress bar.
+            oProgressBar.Close()
+        End Sub
+
+        Public Sub TestStatusBarProgressBar()
+            Dim iStepCount As Long
+            iStepCount = 50
+
+            ' Create a new ProgressBar object.
+            Dim oProgressBar As ProgressBar
+            oProgressBar = g_inventorApplication.CreateProgressBar(True, iStepCount, "Test Progress")
+
+            ' Set the message for the progress bar
+            oProgressBar.Message = "Executing some process"
+
+            Dim i As Long
+            For i = 1 To iStepCount
+                ' Sleep 0.2 sec to simulate some process
+                Sleep(200)
+                oProgressBar.Message = "Executing some process - " & i
+                oProgressBar.UpdateProgress()
+            Next
+
+            ' Terminate the progress bar.
+            oProgressBar.Close()
+        End Sub
+#End Region
     End Class
 End Namespace
 
