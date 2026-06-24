@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Autodesk.Inventor.Sdk" Version="2.0.1" />
+    <PackageReference Include="Autodesk.Inventor.Sdk" Version="1.0.3" />
     <PackageReference Include="xunit.extensibility.core" Version="2.9.0" />
   </ItemGroup>
 
@@ -22,4 +22,10 @@
     <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
   </ItemGroup>
 
-</Project>
+  <ItemGroup>
+    <None Update="Autodesk.Inventor.Interop.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+ </Project>

@@ -64,6 +64,9 @@
     <Compile Include="AssemblyInfo.vb" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Autodesk.Inventor.Interop.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="My Project\Application.myapp" />
     <None Include="Readme.txt" />
   </ItemGroup>
@@ -98,7 +101,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Autodesk.Inventor.Sdk" Version="2.0.1" />
+    <PackageReference Include="Autodesk.Inventor.Sdk" Version="1.0.3" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\InventorAddin2.Core\InventorAddin2.Core.vbproj" />
