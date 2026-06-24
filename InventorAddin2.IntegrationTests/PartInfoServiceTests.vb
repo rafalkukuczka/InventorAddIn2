@@ -1,7 +1,7 @@
 ﻿Imports Inventor
 Imports Xunit
 
-Public Class PartInfoServiceTests
+Public Class PartInfoServiceTests2
     Implements IDisposable
 
     Sub New()

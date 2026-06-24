@@ -75,10 +75,10 @@ Namespace InventorAddIn2
 
             ' Sample to illustrate creating a button definition.
             'Dim largeIcon As stdole.IPictureDisp = PictureDispConverter.ToIPictureDisp(My.Resources.YourBigImage)
-            Dim largeIcon As stdole.IPictureDisp = PictureDispConverter.ToIPictureDisp(My.Resources.Resource1.ico32x32)
+            Dim largeIcon As Object = PictureDispConverter.ToIPictureDisp(My.Resources.Resource1.ico32x32)
 
             'Dim smallIcon As stdole.IPictureDisp = PictureDispConverter.ToIPictureDisp(My.Resources.YourSmallImage)
-            Dim smallIcon As stdole.IPictureDisp = PictureDispConverter.ToIPictureDisp(My.Resources.Resource1.ico16x16)
+            Dim smallIcon As Object = PictureDispConverter.ToIPictureDisp(My.Resources.Resource1.ico16x16)
             Dim controlDefs As Inventor.ControlDefinitions = g_inventorApplication.CommandManager.ControlDefinitions
             m_sampleButton = controlDefs.AddButtonDefinition("Command Name", "Internal Name", CommandTypesEnum.kShapeEditCmdType, AddInClientID, "Desc", "ToolTip", largeIcon)
 
@@ -263,14 +263,15 @@ Public Module Globals
     ' Dim smallIcon As stdole.IPictureDisp = PictureDispConverter.ToIPictureDisp(My.Resources.MyIcon)
 
     Public NotInheritable Class PictureDispConverter
-        <DllImport("OleAut32.dll", EntryPoint:="OleCreatePictureIndirect", ExactSpelling:=True, PreserveSig:=False)> _
-        Private Shared Function OleCreatePictureIndirect( _
-            <MarshalAs(UnmanagedType.AsAny)> ByVal picdesc As Object, _
-            ByRef iid As Guid, _
-            <MarshalAs(UnmanagedType.Bool)> ByVal fOwn As Boolean) As stdole.IPictureDisp
+        <DllImport("OleAut32.dll", EntryPoint:="OleCreatePictureIndirect", ExactSpelling:=True, PreserveSig:=False)>
+        Private Shared Function OleCreatePictureIndirect(
+            <MarshalAs(UnmanagedType.AsAny)> ByVal picdesc As Object,
+            ByRef iid As Guid,
+            <MarshalAs(UnmanagedType.Bool)> ByVal fOwn As Boolean
+        ) As Object
         End Function
 
-        Shared iPictureDispGuid As Guid = GetType(stdole.IPictureDisp).GUID
+        Private Shared ReadOnly iPictureDispGuid As New Guid("7BF80981-BF32-101A-8BBB-00AA00300CAB")
 
         Private NotInheritable Class PICTDESC
             Private Sub New()
@@ -307,12 +308,12 @@ Public Module Globals
             End Class
         End Class
 
-        Public Shared Function ToIPictureDisp(ByVal icon As System.Drawing.Icon) As stdole.IPictureDisp
+        Public Shared Function ToIPictureDisp(ByVal icon As System.Drawing.Icon) As Object
             Dim pictIcon As New PICTDESC.Icon(icon)
             Return OleCreatePictureIndirect(pictIcon, iPictureDispGuid, True)
         End Function
 
-        Public Shared Function ToIPictureDisp(ByVal bmp As System.Drawing.Bitmap) As stdole.IPictureDisp
+        Public Shared Function ToIPictureDisp(ByVal bmp As System.Drawing.Bitmap) As Object
             Dim pictBmp As New PICTDESC.Bitmap(bmp)
             Return OleCreatePictureIndirect(pictBmp, iPictureDispGuid, True)
         End Function
